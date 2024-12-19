@@ -4,12 +4,24 @@ on: [workflow_dispatch]
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [ 'amd64', 'arm64' ]
+        
     steps:
     - uses: actions/checkout@v4
     - uses: cachix/install-nix-action@v20
     - uses: DeterminateSystems/magic-nix-cache-action@main
-    - name: build
-      run: nix build .
+    
+    - name: Setup Docker
+      uses: docker/setup-buildx-action@v1
+ 
+    - name: Build Docker Image
+      run: |
+        docker build \
+          --platform="linux/${{ matrix.platform }}" \
+          --tag my-image-name:"${{ matrix.platform }}" \
+          --file Dockerfile .
     - name: Load Docker Image
       run: |
         nix build .#dockerImage
@@ -19,7 +31,10 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
+
     - name: Push Docker Image
-      run: |
-        docker tag llonebot:latest lhpmain/llonebot:latest
-        docker push lhpmain/llonebot:latest
+      if: startsWith(github.ref, 'refs/tags/') == false
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        tags: my-image-name:${{ matrix.platform }}
