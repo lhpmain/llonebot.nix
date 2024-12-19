@@ -11,17 +11,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - uses: cachix/install-nix-action@v20
-    - uses: DeterminateSystems/magic-nix-cache-action@main
-    
-    - name: Setup Docker
-      uses: docker/setup-buildx-action@v1
- 
-    - name: Build Docker Image
-      run: |
-        docker build \
-          --platform="linux/${{ matrix.platform }}" \
-          --tag my-image-name:"${{ matrix.platform }}" \
-          --file Dockerfile .
+    - uses: DeterminateSystems/magic-nix-cache-action@main        
+    - name: build
+      run: nix build .
     - name: Load Docker Image
       run: |
         nix build .#dockerImage
@@ -31,10 +23,7 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-
     - name: Push Docker Image
-      if: startsWith(github.ref, 'refs/tags/') == false
-      uses: docker/build-push-action@v2
-      with:
-        push: true
-        tags: llonebot:${{ matrix.platform }}
+      run: |
+        docker tag llonebot:latest lhpmain/llonebot:latest
+        docker push lhpmain/llonebot:latest
