@@ -17,8 +17,8 @@ jobs:
     - name: Login Docker Hub
       uses: docker/login-action@v3
       with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        username: lhpmain
+        password: s123321
     - name: Push Docker Image
       run: |
         docker tag llonebot:latest lhpmain/llonebot:latest
