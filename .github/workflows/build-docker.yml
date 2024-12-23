@@ -20,10 +20,6 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
     - name: Push Docker Image
-      run: |
-        docker tag llonebot:latest initialencounter/llonebot:latest
-        docker push initialencounter/llonebot:latest
-    - name: Build the docker image 和 push
         run: |
           docker buildx create --use
           docker buildx build
