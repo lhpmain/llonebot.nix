@@ -23,11 +23,7 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-    #- name: Push Docker Image
-    #  run: |
-    #    docker tag ${{ secrets.DOCKERHUB_USERNAME }}/llonebot:latest
-    #    docker push  .
-        - name: Push Docker Image
+    - name: Push Docker Image
       run: |
         docker tag llonebot:latest ${{ secrets.DOCKERHUB_USERNAME }}/llonebot:latest
         docker push ${{ secrets.DOCKERHUB_USERNAME }}/llonebot:latest
