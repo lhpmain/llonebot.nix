@@ -29,5 +29,5 @@ jobs:
     #    docker push  .
         - name: Push Docker Image
       run: |
-        docker tag llonebot:latest ${{ secrets.DOCKERHUB_USERNAME }}/llonebot:latest
+        docker tag llonebot:latest lhpmain/llonebot:latest
         docker push  .
