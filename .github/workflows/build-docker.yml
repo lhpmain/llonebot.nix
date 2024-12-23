@@ -12,17 +12,19 @@ jobs:
       matrix:
         platform:
           - linux/amd64
-          - linux/arm64
+          - linux/aarch64
     steps:
     - name: Prepare
         run: |
           platform=${{ matrix.platform }}
-          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
     - uses: actions/checkout@v4
     - uses: cachix/install-nix-action@v20
+    - uses: docker/build-push-action@v5
     - uses: DeterminateSystems/magic-nix-cache-action@main
     - name: build
-      run: nix build .
+      run: |
+          platform=${{ matrix.platform }}
+          nix build .
     - name: Load Docker Image
       run: |
         nix build .#dockerImage
