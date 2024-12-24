@@ -14,19 +14,16 @@ jobs:
           - linux/amd64
           - linux/aarch64
     steps:
-    - name: Prepare
-        run: |
-          platform=${{ matrix.platform }}
     - uses: actions/checkout@v4
     - uses: cachix/install-nix-action@v20
     - uses: docker/build-push-action@v5
     - uses: DeterminateSystems/magic-nix-cache-action@main
     - name: build
       run: |
-          platform=${{ matrix.platform }}
           nix build .
     - name: Load Docker Image
       run: |
+        platform=${{ matrix.platform }}
         nix build .#dockerImage
         docker load < result
     - name: Login Docker Hub
