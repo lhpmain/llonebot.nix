@@ -23,7 +23,6 @@ jobs:
           nix build .
     - name: Load Docker Image
       run: |
-        platform=${{ matrix.platform }}
         nix build .#dockerImage
         docker load < result
     - name: Login Docker Hub
